@@ -1,19 +1,16 @@
 from toolz.curried import *
-import os
 from collections import namedtuple
-
-APP_ROOT = "/Applications"
-
-App = namedtuple("App", ["root", "app"])
-
-def recursive_files(root_path, dirs=False):
-    for root, dirnames, filenames in os.walk(root_path):
-        for f in (filenames if not dirs else dirnames):
-            yield App(root, f)
+from tools import recursive_files
+from app import App
+import os
 
 def is_app_filter(maybe):
-    return maybe.app.endswith(".app")
+    return os.path.basename(maybe).endswith(".app")
 
 def app_paths(root_path):
-    files = recursive_files(root_path)
+    files = recursive_files(root_path, depth=2, dirs=True)
     return filter(is_app_filter, files)
+
+def make_apps(root_path="/Applications"):
+    paths = app_paths(root_path)
+    apps = list(map(App, paths))

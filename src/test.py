@@ -1,3 +1,4 @@
 from app_finder import app_paths
+from app import App
 
-print(list(app_paths("/Applications")))
+print(App("/Applications/Alfred 3.app"))
